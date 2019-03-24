@@ -1,6 +1,6 @@
 # DLX File Encoder
 This is a project for CSCI3330 - Computer Architecture
-## The purpose
+## Purpose
 This is a file encoder for [DLX Assember](https://en.wikipedia.org/wiki/DLX) essentially it takes a text file with instruction and gives the hexadecimal output for that file.
 
 ### Usage

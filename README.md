@@ -15,4 +15,4 @@ Then to properly use the program
 ```
 
 ### Features
-In order to parse the file properly, I used Regular Expression. it allowed me to efficiently get matches of the file without having to do insane regular c++ string parsing.
+In order to parse the file properly, I used Regular Expression. It allowed me to efficiently get matches of the file without having to do redudant matches of regular c++ string parsing. I learned how to use Regex by using this [Website](https://regexr.com/).

@@ -1,0 +1,66 @@
+unsigned long ParseFile::encodeLine(int lineNum) {
+string line = lines.at(lineNum);
+string rs1, imm, rs2, rd, func, label, val;
+
+unsigned long moveOver = 0;
+
+if((lineNum)) {
+moveOver = line.find(':') + 1;
+}
+
+auto opCodeLoc  = line.find_first_of(' ');
+auto firstComma = line.find_first_of(',');
+auto lastComma = line.find_last_of(',');
+auto firstParen = line.find('(');
+auto op = string(&line[moveOver], &line[opCodeLoc]);
+
+if(isRtype(op)) { // ADD r2,r3,r4
+
+rs1  = string(&line[firstComma + 2], &line[lastComma]);
+rs2  = string(&line[lastComma + 2], &line[line.size()]);
+rd   = string(&line[opCodeLoc + 2], &line[firstComma]);
+func = string(&line[0 + moveOver], &line[opCodeLoc]);
+
+val = binCode(stoi(rs1), 5) + binCode(stoi(rs2), 5) +
+binCode(stoi(rd), 5) + binCode(r.at(func),11);
+
+return stoull(val, 0, 2);
+} else if(m.at(op) == 2 || m.at(op) == 3) { //J or JAL label
+// auto offset;
+label = string(&line[moveOver+2], &line[line.size()]);
+int key = findLocation(label);
+int offset = (key * 4) - (lineNum * 4 + 4);
+
+val = binCode(m.at(op), 6) + binCode(offset, 26);
+
+return stoull(val, 0, 2);
+
+} else {
+if(line.find(",") == string::npos) { // if not , fix later.
+fatal("Invalid instruction line: " + to_string(lineNum));
+} else if(line.at(firstComma - 1) == ')') { // sb 4(r0),r2 store example
+rs1 = string(&line[firstParen + 2],  &line[firstComma - 1]);
+imm = string(&line[opCodeLoc  + 1],  &line[firstParen]);
+rs2 = string(&line[firstComma + 2],  line.size());
+
+} else if(line.at(line.size() - 1) == ')') { // lh r3,4(r4) might need to fix neg
+rs1 = string(&line[firstParen + 2],  &line[line.size() - 1]);
+rs2 = string(&line[opCodeLoc  + 2],  &line[firstComma]);
+imm = string(&line[firstComma + 1],  &line[firstParen]);
+
+} else if(count(line.begin(), line.end(), ',') == 2) { // ADDI r7, r8, #3
+
+rs1 = string(&line[firstComma + 2],  &line[lastComma]);
+rs2 = string(&line[opCodeLoc  + 2],  &line[firstComma]);
+imm = string(&line[lastComma  + 2],  &line[line.size()]);
+
+} else {
+fatal("Invalid instruction line: " + to_string(lineNum));
+}
+}
+
+val = binCode(m.at(op), 6) + binCode(stoi(rs1), 5) +
+binCode(stoi(rs2), 5) + binCode(stoi(imm), 16);
+
+return stoull(val, 0, 2);
+}

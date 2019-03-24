@@ -13,3 +13,6 @@ Then to properly use the program
 ```
 ./Main <inputfile> <outputfile>
 ```
+
+### Features
+In order to parse the file properly, I used Regular Expression. it allowed me to efficiently get matches of the file without having to do insane regular c++ string parsing.

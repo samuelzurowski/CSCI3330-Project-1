@@ -41,18 +41,20 @@ unsigned long ParseFile::encodeLine(int lineNum) {
          * ([\\d]+), group in range of digitals one or more then comma.
          * [^,\\d]+  not in range of comma or digit one or more.
          */
-            val = binCode(stoi(matches[2].str()), 5) +
-                  binCode(stoi(matches[3].str()), 5) +
-                  binCode(stoi(matches[1].str()), 5) +
-                  binCode(InstructionItem::r.at(item.op), 11);
-            return stoull(val, 0, 2);
+            rs1 = matches[2].str();
+            rs2 = matches[3].str();
+            rd = matches[1].str();
+
+            val = binCode(stoi(rs1), 5) + binCode(stoi(rs2), 5) +
+                binCode(stoi(rd), 5) + binCode(InstructionItem::r.at(func), 11);
+            return stoul(val, 0, 2);
         }
     }
     else if(item.type == InstructionItem::J_TYPE) { //J or JAL label
         int key = findLocation(item.params);
         int offset = (key * 4) - (lineNum * 4 + 4);
         val = binCode(InstructionItem::m.at(item.op), 6) + binCode(offset, 26);
-        return stoull(val, 0, 2);
+        return stoul(val, 0, 2);
     }
     else if (item.type == InstructionItem::I_TYPE){ // I TYPE
         if (item.isBranch(item.op)) { // branch instr
@@ -115,19 +117,19 @@ unsigned long ParseFile::encodeLine(int lineNum) {
             binCode(stoi(rs1), 5) + binCode(stoi(rs2), 5) +
             binCode(stoi(imm), 16);
             
-            return stoull(val, 0, 2);
+            return stoul(val, 0, 2);
         }
     } else { // if op JR or JALR no commas
         rs1 = string(&item.params[1], &item.params[item.params.size()]);
         
         val = binCode(InstructionItem::m.at(item.op), 6) +
             binCode(stoi(rs1), 5) + binCode(0, 5) + binCode(0, 16);
-        return stoull(val, 0, 2);
+        return stoul(val, 0, 2);
     } val = binCode(InstructionItem::m.at(item.op), 6) +
           binCode(stoi(rs1), 5) + binCode(stoi(rs2), 5) +
           binCode(stoi(imm), 16);
     
-    return stoull(val, 0, 2);
+    return stoul(val, 0, 2);
 }
 
 void ParseFile::encodeToFile() {

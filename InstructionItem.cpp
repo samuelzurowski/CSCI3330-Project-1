@@ -60,7 +60,6 @@ const map<string, int> InstructionItem::m = { // map of op codes
     {"sgeui", 53}, {"slli", 54},  {"srli", 55},  {"srai", 56}
 };
 
-
 const map<string, int> InstructionItem::r = { // r types
     {"sll",   4}, {"srl",   6}, {"sra", 7},   {"sltu", 18},
     {"sgtu", 19}, {"sleu", 20}, {"sgeu", 21}, {"add", 32},

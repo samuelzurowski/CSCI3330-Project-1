@@ -60,7 +60,7 @@ unsigned long ParseFile::encodeLine(int lineNum) {
         if (item.isBranch(item.op)) { // branch instr
             //for bra
             unsigned long comma = item.params.find_first_of(',');
-            string jumpInstr = string(&item.params[comma+1], &item.params[item.params.size()]);
+            string jumpInstr = string(&item.params[comma + 1], &item.params[item.params.size()]);
             
             int key = findLocation(jumpInstr);
             int offset = (key * 4) - ((lineNum * 4) + 4);
